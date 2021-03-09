@@ -6,6 +6,9 @@ public class PipeSpawner : MonoBehaviour {
     public float moveSpeed; //speed of our pipe
     public float spawnDelay; //The delay between each pipe spawn
 
+    public float minOffset; //the lowest the pipes can go
+    public float maxOffset; //the highest the pipes can go
+
     void Awake() { // happens before Start()
         Kill.onKill += OnFlappyBirdDeath; // subscribe to onDeath event
     }
@@ -21,16 +24,19 @@ public class PipeSpawner : MonoBehaviour {
     }
     IEnumerator StartSpawnCo(){ //Spawn pipe and set it's RigidBody2D's velocity
         while (true){
-        GameObject pipe = Instantiate(pipePrefab, transform.position, Quaternion.identity);
-        //The gameobject you want to spawn
-        //The Vector3 position you spawning it at, the gameobject's position that this script is attached to
-        //The rotation you want, in this case it means "no ratation"
-        pipe.GetComponent<Rigidbody2D>().velocity = Vector2.left * moveSpeed;
-        // First you want to grab reference to the pipe's RigidBody2D,
-        // then you set it's velocity in the direction of left and moveSpeed
-        yield return new WaitForSeconds(spawnDelay); //All coroutines
-        // must yield return at the end, especially in a while loop or else game will crash
-        //In this case we will yield return a wait for our spawn delay
+            float randOffset = Random.Range(minOffset, maxOffset); //  Randomize a value between the min and max offset, then we will add it to the Y axis of the pipe
+            Vector3 pipeSpawnPosition = new Vector3(transform.position.x,transform.position.y + randOffset, transform.position.z); //creating a new vector with the offset
+
+            GameObject pipe = Instantiate(pipePrefab, pipeSpawnPosition, Quaternion.identity);
+            //The gameobject you want to spawn
+            //The Vector3 position you spawning it at, the gameobject's position that this script is attached to
+            //The rotation you want, in this case it means "no ratation"
+            pipe.GetComponent<Rigidbody2D>().velocity = Vector2.left * moveSpeed;
+            // First you want to grab reference to the pipe's RigidBody2D,
+            // then you set it's velocity in the direction of left and moveSpeed
+            yield return new WaitForSeconds(spawnDelay); //All coroutines
+            // must yield return at the end, especially in a while loop or else game will crash
+            //In this case we will yield return a wait for our spawn delay
         }
     }
     void OnFlappyBirdDeath() { //onDeath event will trigger this function
