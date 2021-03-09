@@ -6,6 +6,9 @@ public class PipeSpawner : MonoBehaviour {
     public float moveSpeed; //speed of our pipe
     public float spawnDelay; //The delay between each pipe spawn
 
+    void Awake() { // happens before Start()
+        Kill.onKill += OnFlappyBirdDeath; // subscribe to onDeath event
+    }
     // Use this for initialization
     void Start(){
         StartSpawn(); //We will start the spawn when game starts
@@ -22,12 +25,18 @@ public class PipeSpawner : MonoBehaviour {
         //The gameobject you want to spawn
         //The Vector3 position you spawning it at, the gameobject's position that this script is attached to
         //The rotation you want, in this case it means "no ratation"
-        pipe.GetComponent<Rigidbody2D>().velocity = Vector2.left*moveSpeed;
+        pipe.GetComponent<Rigidbody2D>().velocity = Vector2.left * moveSpeed;
         // First you want to grab reference to the pipe's RigidBody2D,
         // then you set it's velocity in the direction of left and moveSpeed
         yield return new WaitForSeconds(spawnDelay); //All coroutines
         // must yield return at the end, especially in a while loop or else game will crash
         //In this case we will yield return a wait for our spawn delay
         }
+    }
+    void OnFlappyBirdDeath() { //onDeath event will trigger this function
+        StopSpawn();
+    }
+    void OnDestroy(){
+        Kill.onKill -= OnFlappyBirdDeath; //Unsubscribe when gameobject is destroyed
     }
 }
