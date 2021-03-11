@@ -16,4 +16,9 @@ CSC59866 - Spring 2021 - Intro Project using Unity Engine
   - Pipes spawn correctly such as correctly spaced out spawn time
   - Bird dies if it comes into contact with pipe
   - Game ends appropriately when player reaches end state
+
+
+
 <img src='FlappyBirdProgress.gif' width=''/>
+
+- March 9, 2021
